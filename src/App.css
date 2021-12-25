@@ -1,0 +1,233 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+  overflow: hidden;
+  background-color: #39afbc;
+  padding: 20px 10px;
+}
+
+.header a {
+  float: left;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+
+  border-radius: 4px;
+}
+
+.header a.logo {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.btn__outline {
+  border: 2px solid black;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  color: black;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 30px;
+}
+.btn__primary {
+  background-color: #41b695;
+  background-repeat: no-repeat;
+  color: white;
+  padding: 10px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  margin: 20px;
+  border: none;
+  outline: none;
+  border-radius: 2px;
+}
+.btn__white {
+  background-color: white;
+  background-repeat: no-repeat;
+  color: #fd3a79;
+  padding: 10px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  margin: 20px;
+  border: none;
+  outline: none;
+  border-radius: 2px;
+}
+.btn__minus {
+  font-size: 40px;
+  font-weight: bold;
+  height: 42px;
+  color: rgb(93 126 151);
+  width: 36px;
+  border: none;
+  outline: none;
+  align-self: center;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+  /* padding-top: 60px; */
+}
+.sidnav__Form {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  overflow-x: hidden;
+}
+.sidenav_Footer {
+  align-self: flex-start !important;
+  margin-top: auto;
+  background: #8080801c;
+  width: 100%;
+  height: 80px;
+}
+
+.sidenav .backbtn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 36px;
+}
+
+/* ******** Form *********/
+
+input[type="text"] {
+  width: 90%;
+  padding: 14px 20px;
+  margin: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+select {
+  width: 80%;
+  padding: 12px 20px;
+  margin: 10px 0px 10px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.formLable {
+  margin: 30px 0px 4px 22px;
+  font-weight: 550;
+}
+.segment__message {
+  margin: 20px 22px;
+  font-size: 16px;
+}
+.Traites {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 0px 20px 0px 0px;
+}
+.clr__dot1 {
+  color: #41b695;
+  align-self: center;
+}
+
+.clr__dot2 {
+  color: red;
+  align-self: center;
+}
+.first__traites {
+  margin-right: 10px;
+}
+.form__Fields__dowpdown {
+  border: 3px solid lightblue;
+  height: auto;
+  width: 90%;
+  padding: 5px;
+  margin: 13px 20px 4px 10px;
+}
+.form__Fieldws_Row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.form__field__dropdwn__val{
+  width: 90%;
+  padding: 5px;
+  margin: 0px 20px 7px 10px;
+}
+.form__add__Schema__link{
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0px 0px 6px 48px;
+  width: 123px;
+  cursor: pointer;
+  border-bottom:2px solid #41b695;
+  padding-bottom:2px;
+  color: #41b695;
+  text-decoration: none;
+}
+.Error__Message{
+  margin: 30px 10px 0px 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+/*********** Toast Messge **********************/
+
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px; 
+  margin-left: -125px; 
+  background-color: #333; 
+  color: #fff; 
+  text-align: center; 
+  border-radius: 2px; 
+  padding: 16px; 
+  position: fixed; 
+  z-index: 1; 
+  left: 50%; 
+  bottom: 30px; 
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+  visibility: visible; 
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
