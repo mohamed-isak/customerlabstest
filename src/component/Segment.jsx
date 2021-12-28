@@ -1,47 +1,38 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
-import { schemaVals, formDatas } from "./common/Common__data";
-import {API__Server__Req} from "./common/API_Handle";
+import { schemaVals } from "./common/Common__data";
+import { API__Server__Req } from "./common/API_Handle";
 
 const Segment = () => {
   const [schemaValues, setShemaValues] = useState([]);
+  const [schemaKeys, setShemaKeys] = useState([]);
   const [segmentName, setSegementName] = useState([]);
-  const [formValues, setFormValues] = useState({
-    first_name: "",
-    last_name: "",
-    gender: "",
-    age: "",
-    account_name: "",
-    city: "",
-    state: "",
-  });
-
   const [stateUpdate, setVal] = useState(0);
   const [errorMessage, seterrorMessage] = useState(0);
+  const [btnText, setbtnText] = useState("Save the Segement");
   var slectednewSchemeaopt;
   var eve;
 
   /***** State Update********* */
-  useEffect(() => {
-    console.log("State Update");
-  }, [stateUpdate]);
+  useEffect(() => {}, [stateUpdate]);
 
-
-
-  const changeHandler = (e) => {
-    console.log(e.target.value);
-    setFormValues({ ...formValues, [e.target.name]: e.target.value });
-    setVal(stateUpdate === 0 ? 1 : 0);
-  };
+  // Filter arry
+  function checkMatching(drpdata) {
+    return !schemaValues.includes(drpdata.lable);
+  }
 
   const addNewSchemeaVal = (e) => {
     e.preventDefault();
     const data = schemaValues;
+    const keys = schemaKeys;
     if (!data.includes(slectednewSchemeaopt.trim())) {
       data.push(slectednewSchemeaopt);
+      keys.push(eve.target.value);
+      var sel = document.getElementById("schemaoption");
+      sel.selectedIndex = 0;
       setVal(stateUpdate === 0 ? 1 : 0);
       setShemaValues(data);
-      eve.target.value = " Add schema to segment";
+      setShemaKeys(keys);
     } else {
       console.log("Already added");
     }
@@ -49,42 +40,40 @@ const Segment = () => {
     console.log(schemaValues);
   };
 
-
   /********** Onsubmit Function  */
   const onSubmit = (e) => {
     e.preventDefault();
-    var keys = Object.keys(formValues);
     var parseData = {
       segment_name: segmentName,
-      schema: [
-        { [keys[0]]: formValues.first_name },
-        { [keys[1]]: formValues.last_name },
-        { [keys[2]]: formValues.gender },
-        { [keys[3]]: formValues.age },
-        { [keys[4]]: formValues.account_name },
-        { [keys[5]]: formValues.city },
-        { [keys[6]]: formValues.state },
-      ],
+       schema: schemaKeys.map((item,i)=>{
+         return {[item]:schemaValues[i]}
+       }),
     };
-   
-
-    var [res,message] = API__Server__Req('https://webhook.site/',parseData);
-    console.log(message);
-    if(res)
-    {
+    console.log(parseData);
+    setbtnText('Loading...');
+    var res = API__Server__Req(
+      "https://webhook.site/6be7d72d-75cf-42b2-b2db-11f4416003f8",
+      parseData
+    );
+    
+    setTimeout(()=>{
+      console.log(res);
+    if (res) {
       closeNav();
-      seterrorMessage(message);
+      setShemaValues([]);
+      setShemaKeys([]);
+      setbtnText('Save the Segement');
+      seterrorMessage("New Segma added");
+      setVal(stateUpdate === 0 ? 1 : 0);
+      showToast();
+    } else {
+      closeNav();
+      setbtnText('Save the Segement');
+      seterrorMessage("Error");
       setVal(stateUpdate === 0 ? 1 : 0);
       showToast();
     }
-    else
-    {
-      closeNav();
-      seterrorMessage(message);
-      setVal(stateUpdate === 0 ? 1 : 0);
-      showToast();
-    }
-
+    },[2000])
   };
 
   // *******************UI Render*******************
@@ -137,14 +126,41 @@ const Segment = () => {
                     <div className="form__Fieldws_Row">
                       <span className="clr__dot1">&#11044;</span>
                       <select
-                        id="country"
-                        name={item}
-                        value={formValues[item]}
-                        onChange={changeHandler}
+                        id={`forrmval${i}`}
+                        name={schemaKeys[i]}
+                        value="mohamed isak"
+                        onChange={(e) => {
+                          var sel = document.getElementById(`forrmval${i}`);
+                          schemaKeys[i] = sel.options[sel.selectedIndex].value;
+                          schemaValues[i] = sel.options[sel.selectedIndex].text;
+                          setVal(stateUpdate === 0 ? 1 : 0);
+                        
+                        }}
                       >
-                        {renderOption(item)}
+                        <option name={schemaKeys[i]}>{item}</option>
+                        {/* {renderOption(item)} */}
+                        {schemaVals.filter(checkMatching).map((items) => {
+                          return (
+                            <option
+                              key={items.id}
+                              value={items.value}
+                            >
+                              {items.lable}
+                            </option>
+                          );
+                        })}
                       </select>
-                      <button className="btn__minus">&#x2212;</button>
+                      <button
+                        className="btn__minus"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          schemaValues.splice(i, 1);
+                          schemaKeys.splice(i,1);
+                          setVal(stateUpdate === 0 ? 1 : 0);
+                        }}
+                      >
+                        &#x2212;
+                      </button>
                     </div>
                   </>
                 );
@@ -164,15 +180,19 @@ const Segment = () => {
                 name="New schema"
                 value={schemaValues.value}
                 onChange={(e) => {
-                  slectednewSchemeaopt = e.target.value;
+            
+                  var sel = document.getElementById("schemaoption");
+                  console.log(sel.selectedIndex);
+                  var text = sel.options[sel.selectedIndex].text;
+                  slectednewSchemeaopt = text;
                   eve = e;
                   console.log(e.target.value);
                 }}
               >
-                <option value="australia" selected disabled>
+                <option value="default" selected disabled>
                   Add schema to segment
                 </option>
-                {schemaVals.map((items, i) => {
+                {schemaVals.filter(checkMatching).map((items, i) => {
                   return (
                     <>
                       <option value={items.value}>{items.lable}</option>
@@ -196,9 +216,11 @@ const Segment = () => {
 
           <div className="sidenav_Footer">
             <button className="btn__primary" onClick={onSubmit}>
-              Save the Segement
+              {btnText}
             </button>
-            <button className="btn__white">Cancel</button>
+            <button className="btn__white" onClick={closeNav}>
+              Cancel
+            </button>
           </div>
         </form>
       </div>
@@ -206,122 +228,15 @@ const Segment = () => {
   );
 };
 
-// <!------------ Dynamic Option Values ---------------->
-
-function renderOption(param) {
-  switch (param) {
-    case "first_name":
-      return (
-        <>
-          {formDatas[0].first_name.map((item, i) => {
-            return i === 0 ? (
-              <option value={item} disabled>
-                {item}
-              </option>
-            ) : (
-              <option value={item}>{item}</option>
-            );
-          })}
-        </>
-      );
-    case "last_name":
-      return (
-        <>
-          {formDatas[1].last_name.map((item, i) => {
-            return i === 0 ? (
-              <option value={item} selected disabled>
-                {item}
-              </option>
-            ) : (
-              <option value={item}>{item}</option>
-            );
-          })}
-        </>
-      );
-    case "gender":
-      return (
-        <>
-          {formDatas[2].gender.map((item, i) => {
-            return i === 0 ? (
-              <option value={item} selected disabled>
-                {item}
-              </option>
-            ) : (
-              <option value={item}>{item}</option>
-            );
-          })}
-        </>
-      );
-    case "age":
-      return (
-        <>
-          {formDatas[3].age.map((item, i) => {
-            return i === 0 ? (
-              <option value={item} selected disabled>
-                {item}
-              </option>
-            ) : (
-              <option value={item}>{item}</option>
-            );
-          })}
-        </>
-      );
-    case "account_name":
-      return (
-        <>
-          {formDatas[4].account_name.map((item, i) => {
-            return i === 0 ? (
-              <option value={item} selected disabled>
-                {item}
-              </option>
-            ) : (
-              <option value={item}>{item}</option>
-            );
-          })}
-        </>
-      );
-    case "city":
-      return (
-        <>
-          {formDatas[5].city.map((item, i) => {
-            return i === 0 ? (
-              <option value={item} selected disabled>
-                {item}
-              </option>
-            ) : (
-              <option value={item}>{item}</option>
-            );
-          })}
-        </>
-      );
-    case "state":
-      return (
-        <>
-          {formDatas[6].state.map((item, i) => {
-            return i === 0 ? (
-              <option value={item} selected disabled>
-                {item}
-              </option>
-            ) : (
-              <option value={item}>{item}</option>
-            );
-          })}
-        </>
-      );
-
-    default:
-      return "foo";
-  }
-}
-
-
 
 // Access DOM Elements
 
 function showToast() {
   var x = document.getElementById("snackbar");
   x.className = "show";
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+  setTimeout(function () {
+    x.className = x.className.replace("show", "");
+  }, 3000);
 }
 
 function openNav() {
@@ -333,6 +248,5 @@ function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
   document.body.style.backgroundColor = "white";
 }
-
 
 export default Segment;

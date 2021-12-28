@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+
 
 
 export const API__Server__Req = (url,params) =>{
-    var reponse,message;
+    var reponse=true;
 
    fetch(url, {
       method: "POST",
@@ -14,10 +14,10 @@ export const API__Server__Req = (url,params) =>{
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params),
     })
-      .then(() => {
+      .then((response) => {
         console.log("new Segma added");
+        console.log(response.statusText);
         reponse = true;
-        message = 'Segma Added';
       })
       .catch((err) => {
         if (err.name === "AbortError") {
@@ -25,9 +25,9 @@ export const API__Server__Req = (url,params) =>{
           reponse = false;
         } else {
             reponse = false;
-            message = err.message;
+          //  message = err.message;
           console.log(err.message);
         }
       });
-    return {reponse,message};
+    return reponse;
 }
